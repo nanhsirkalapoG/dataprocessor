@@ -1,0 +1,3 @@
+class DateCustomField < CustomField
+
+end

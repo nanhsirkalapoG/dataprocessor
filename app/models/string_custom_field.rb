@@ -1,0 +1,3 @@
+class StringCustomField < CustomField
+
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_06_130400) do
+ActiveRecord::Schema.define(version: 2022_11_06_135510) do
 
   create_table "custom_fields", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "field_name"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2022_11_06_130400) do
     t.bigint "customizable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "type", null: false
     t.index ["customizable_type", "customizable_id"], name: "index_custom_fields_on_customizable_type_and_customizable_id"
   end
 
