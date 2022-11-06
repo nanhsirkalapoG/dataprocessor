@@ -1,0 +1,3 @@
+class NumberCustomField < CustomField
+
+end
