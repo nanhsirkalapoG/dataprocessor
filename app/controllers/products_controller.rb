@@ -10,10 +10,12 @@ class ProductsController < ApplicationController
   end
 
   def create
-    process_custom_fields
-    product = Product.new(product_params)
+    # Should we handle both custom field and product creation in a single
+    # transaction? ActiveRecord::Base.transaction {...}
+    @product = Product.new(product_params)
 
-    if product.save
+    if @product.save
+      process_custom_fields
       render json: { message: 'Product created successfully!' }, status: :ok
     else
       render json: { message: 'Product creation failed!' }, status: :bad_request
@@ -21,9 +23,11 @@ class ProductsController < ApplicationController
   end
 
   def update
-    process_custom_fields
+    # Should we handle both custom field and product creation in a single
+    # transaction? ActiveRecord::Base.transaction {...}
 
     if @product.update(product_params)
+      process_custom_fields
       render json: { message: 'Product updated successfully!' }, status: :ok
     else
       render json: { message: 'Could not update product!', error: @product.errors.full_messages }, status: :bad_request
@@ -44,12 +48,12 @@ class ProductsController < ApplicationController
     custom_fields = custom_field_params[:custom_fields]
     return if custom_fields.blank?
 
-    custom_field_service = CustomFieldService.new(@product)
-    custom_field_service.process_custom_fields(custom_fields)
+    custom_field_service = CustomFieldService.new(@product, custom_fields)
+    custom_field_service.process_custom_fields
   end
 
   def custom_field_params
-    params.permit(custom_fields: [:field_name, :value, :type])
+    params.permit(custom_fields: [:field_name, :value, :data_type])
   end
 
   def product_params

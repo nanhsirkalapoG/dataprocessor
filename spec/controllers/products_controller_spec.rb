@@ -41,6 +41,22 @@ RSpec.describe ProductsController, type: :controller do
         expect(Product.last.description).to eq('test description')
       end
     end
+
+    context 'custom_fields' do
+      let(:test_custom_fields) do
+        10.times.map { |i| { field_name: "field_name_#{i}", value: "value_#{i}", data_type: 'string' } }
+      end
+
+      context 'when custom field length is within the threshold' do
+        it 'add the custom fields' do
+          post(:create, params: { title: 'test', description: 'test description', user_id: user.id, custom_fields: test_custom_fields })
+
+          expect(@response.code).to eq('200')
+          product = Product.last
+          expect(product.custom_fields.count).to eq(10)
+        end
+      end
+    end
   end
 
   describe '#update' do
@@ -48,10 +64,25 @@ RSpec.describe ProductsController, type: :controller do
 
     context 'when the input is valid' do
       it 'update the product' do
-        post(:update, params: { id: product.id, description: 'test description1' })
+        patch(:update, params: { id: product.id, description: 'test description1' })
 
         expect(@response.code).to eq('200')
         expect(Product.last.description).to eq('test description1')
+      end
+    end
+
+    context 'custom_fields' do
+      let(:test_custom_fields) do
+        10.times.map { |i| { field_name: "field_name_#{i}", value: "value_#{i}", data_type: 'string' } }
+      end
+
+      context 'when custom field length is within the threshold' do
+        it 'add the custom fields' do
+          patch(:update, params: { id: product.id, custom_fields: test_custom_fields })
+
+          expect(@response.code).to eq('200')
+          expect(product.custom_fields.count).to eq(10)
+        end
       end
     end
   end

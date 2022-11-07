@@ -4,8 +4,8 @@
 #
 #  id                :bigint           not null, primary key
 #  customizable_type :string(255)      not null
+#  data_type         :string(255)      not null
 #  field_name        :string(255)
-#  type              :string(255)      not null
 #  value             :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
@@ -17,4 +17,12 @@
 #
 class CustomField < ApplicationRecord
   belongs_to :customizable, polymorphic: true
+
+  validates_associated :customizable
+
+  VALID_CUSTOM_FIELD_TYPES = %w[date number string]
+
+  validates :data_type, inclusion: { in: VALID_CUSTOM_FIELD_TYPES }
+
+  scope :by_data_type, -> (data_type) { where(data_type: data_type) }
 end
