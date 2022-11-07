@@ -42,6 +42,9 @@ group :development, :test do
 
   # Annotate the ActiveRecord models
   gem 'annotate', '~> 3.2'
+
+  # Testing framework
+  gem 'rspec-rails', '~> 3.5'
 end
 
 group :development do
