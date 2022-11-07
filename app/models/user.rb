@@ -12,7 +12,7 @@
 class User < ApplicationRecord
   validates :first_name, presence: true, null: false
   validates :last_name, presence: true, null: false
-  validates :email, presence: true, null: false
+  validates :email, presence: true, uniqueness: true, null: false
 
   has_many :products
 end
