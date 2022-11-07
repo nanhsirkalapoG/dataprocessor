@@ -1,24 +1,16 @@
-# README
+# Description
+Application to handle dynamically created custom fields depend on the
+business data
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Types supported
+* Date
+* String
+* Number
 
-Things you may want to cover:
 
-* Ruby version
+## Development
 
-* System dependencies
+Documentation related to writing, testing & debugging code.
 
-* Configuration
+- [Testing](docs/development/testing.md)
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
