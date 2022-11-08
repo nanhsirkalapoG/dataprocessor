@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProductsController < ApplicationController
   before_action :load_product, only: %i[show update destroy]
 
@@ -18,7 +20,7 @@ class ProductsController < ApplicationController
       process_custom_fields
       render json: { message: 'Product created successfully!' }, status: :ok
     else
-      render json: { message: 'Product creation failed!' }, status: :bad_request
+      render json: { message: 'Could not create product!', error: @product.errors.full_messages }, status: :bad_request
     end
   end
 
@@ -53,7 +55,7 @@ class ProductsController < ApplicationController
   end
 
   def custom_field_params
-    params.permit(custom_fields: [:field_name, :value, :data_type])
+    params.permit(custom_fields: %i[field_name value data_type])
   end
 
   def product_params
@@ -62,8 +64,6 @@ class ProductsController < ApplicationController
 
   def load_product
     @product = Product.find_by(params[:id])
-    if @product.blank?
-      render json: { message: 'Resource not found!' }, status: :not_found
-    end
+    render json: { message: 'Resource not found!' }, status: :not_found if @product.blank?
   end
 end

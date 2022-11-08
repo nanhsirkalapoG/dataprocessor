@@ -18,5 +18,20 @@ class Product < ApplicationRecord
 
   has_many :custom_fields, as: :customizable, dependent: :destroy
 
-  validates_length_of :custom_fields, maximum: 30
+  validate :valid_custom_fields?
+
+  CUSTOM_FIELDS_LIMIT_BY_TYPE = {
+    'date' => 10,
+    'number' => 10,
+    'string' => 10
+  }.freeze
+
+  def valid_custom_fields?
+    CUSTOM_FIELDS_LIMIT_BY_TYPE.each do |type, limit|
+      if custom_fields.by_data_type(type).size > limit
+        errors.add(:custom_fields, "Maximum size(#{limit}) reached for type: #{type}!")
+        return false
+      end
+    end
+  end
 end
