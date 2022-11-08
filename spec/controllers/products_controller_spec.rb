@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ProductsController, type: :controller do
@@ -47,13 +49,31 @@ RSpec.describe ProductsController, type: :controller do
         10.times.map { |i| { field_name: "field_name_#{i}", value: "value_#{i}", data_type: 'string' } }
       end
 
-      context 'when custom field length is within the threshold' do
+      context 'when custom field count is within the threshold' do
         it 'add the custom fields' do
-          post(:create, params: { title: 'test', description: 'test description', user_id: user.id, custom_fields: test_custom_fields })
+          post(:create,
+               params: { title: 'test', description: 'test description', user_id: user.id,
+                         custom_fields: test_custom_fields })
 
           expect(@response.code).to eq('200')
           product = Product.last
           expect(product.custom_fields.count).to eq(10)
+        end
+      end
+
+      context 'when the custom fields count is greater than the threshold' do
+        let(:test_custom_fields) do
+          15.times.map { |i| { field_name: "field_name_#{i}", value: "value_#{i}", data_type: 'string' } }
+        end
+
+        it 'limit the custom fields count' do
+          post(:create,
+               params: { title: 'test', description: 'test description', user_id: user.id,
+                         custom_fields: test_custom_fields })
+
+          expect(@response.code).to eq('200')
+          product = Product.last
+          expect(product.custom_fields.count).to eq(11)
         end
       end
     end
@@ -76,13 +96,29 @@ RSpec.describe ProductsController, type: :controller do
         10.times.map { |i| { field_name: "field_name_#{i}", value: "value_#{i}", data_type: 'string' } }
       end
 
-      context 'when custom field length is within the threshold' do
+      context 'when custom field count is within the threshold' do
         it 'add the custom fields' do
           patch(:update, params: { id: product.id, custom_fields: test_custom_fields })
 
           expect(@response.code).to eq('200')
           expect(product.custom_fields.count).to eq(10)
         end
+      end
+    end
+
+    context 'when the custom fields count is greater than the threshold' do
+      let(:test_custom_fields) do
+        15.times.map { |i| { field_name: "field_name_#{i}", value: "value_#{i}", data_type: 'string' } }
+      end
+
+      it 'limit the custom fields count' do
+        post(:create,
+             params: { title: 'test', description: 'test description', user_id: user.id,
+                       custom_fields: test_custom_fields })
+
+        expect(@response.code).to eq('200')
+        product = Product.last
+        expect(product.custom_fields.count).to eq(11)
       end
     end
   end
