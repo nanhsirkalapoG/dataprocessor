@@ -5,4 +5,12 @@ Rails.application.routes.draw do
 
   resources :products, defaults: {format: :json} do
   end
+
+  resources :custom_fields, defaults: {format: :json}, only: [:index] do
+    collection do
+      post :create
+      patch :update
+      delete :destroy
+    end
+  end
 end
