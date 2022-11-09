@@ -4,12 +4,14 @@ User.create!(
   [{
     first_name: 'Magnus',
     last_name: 'Carlsen',
-    email: 'magnus.c@testchess.com'
+    email: 'magnus.c@testchess.com',
+    password: 'password'
   },
    {
      first_name: 'Anand',
      last_name: 'Viswanathan',
-     email: 'vishy.a@testchess.com'
+     email: 'vishy.a@testchess.com',
+     password: 'password'
    }]
 )
 

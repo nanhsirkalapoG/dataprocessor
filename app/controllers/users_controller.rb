@@ -1,8 +1,16 @@
-class UsersController < ApplicationController
-  before_action :load_user, only: %i[show update]
+# frozen_string_literal: true
 
-  def index
-    render json: { users: User.all }, status: :ok
+class UsersController < ApplicationController
+  def login
+    render json: { message: 'Logged in successfully!' }, status: :ok if authenticate
+
+    render json: { message: 'Invalid username/password!' }, status: :unauthorized
+  end
+
+  def logout
+    session[:user_id] = nil
+
+    render json: { message: 'Logged out successfully!' }, status: :ok
   end
 
   def show
@@ -31,13 +39,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.permit(:first_name, :last_name, :email)
-  end
-
-  def load_user
-    @user = User.find_by(params[:id])
-    if @user.blank?
-      render json: { message: 'Resource not found!' }, status: :not_found and return
-    end
+    params.permit(:first_name, :last_name, :email, :password)
   end
 end

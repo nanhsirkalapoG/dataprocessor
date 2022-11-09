@@ -3,6 +3,10 @@ require 'rails_helper'
 RSpec.describe CustomFieldsController, type: :controller do
   let(:entity) { FactoryBot.create(:product) }
 
+  before do
+    session[:user_id] = entity.user_id
+  end
+
   describe 'index' do
     let!(:custom_field_1) { FactoryBot.create(:custom_field, customizable: entity) }
     let!(:custom_field_2) { FactoryBot.create(:custom_field, customizable: entity) }

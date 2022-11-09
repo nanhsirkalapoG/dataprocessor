@@ -5,6 +5,10 @@ require 'rails_helper'
 RSpec.describe ProductsController, type: :controller do
   let(:user) { FactoryBot.create(:user) }
 
+  before do
+    session[:user_id] = user.id
+  end
+
   describe '#index' do
     before do
       2.times { |_| FactoryBot.create(:product) }
