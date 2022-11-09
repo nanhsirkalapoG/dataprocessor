@@ -12,24 +12,16 @@ class CustomFieldsController < ApplicationController
 
   def create
     custom_fields_params = permitted_params[:custom_fields]
-    custom_fields_params.each do |custom_field_params|
-      @entity.custom_fields << CustomField.new(custom_field_params)
-    end
+    custom_field_service = CustomFieldService.new(@entity, custom_fields_params)
+    custom_field_service.process_custom_fields
 
     render json: { message: 'Custom fields are created successfully!' }, status: :ok
   end
 
   def update
     custom_fields_params = permitted_params[:custom_fields]
-    custom_fields_params.each do |custom_field_params|
-      custom_field = CustomField.find_or_initialize_by(
-        customizable: @entity,
-        field_name: custom_field_params[:field_name],
-        data_type: custom_field_params[:data_type]
-      )
-      custom_field.value = custom_field_params[:value]
-      @entity.custom_fields << custom_field
-    end
+    custom_field_service = CustomFieldService.new(@entity, custom_fields_params)
+    custom_field_service.process_custom_fields
 
     render json: { message: 'Custom fields are updated successfully!' }, status: :ok
   end
