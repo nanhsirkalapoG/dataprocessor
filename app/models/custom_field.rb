@@ -23,6 +23,7 @@ class CustomField < ApplicationRecord
   VALID_CUSTOM_FIELD_TYPES = %w[date number string]
 
   validates :data_type, inclusion: { in: VALID_CUSTOM_FIELD_TYPES }
+  validates :field_name, uniqueness: { scope: [:customizable_type, :customizable_id] }
 
   scope :by_data_type, -> (data_type) { where(data_type: data_type) }
 end
