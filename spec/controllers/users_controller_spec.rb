@@ -7,6 +7,32 @@ RSpec.describe UsersController, type: :controller do
     session[:user_id] = user.id
   end
 
+  describe '#login' do
+    context 'when the credential is valid' do
+      it 'authorze the user' do
+        post(:login, params: { username: user.email, password: user.password })
+
+        expect(@response.code.to_i).to eq(200)
+      end
+    end
+
+    context 'when the credential is valid' do
+      it 'raises an unauthorized error' do
+        post(:login, params: { username: user.email, password: 'invalid' })
+
+        expect(@response.code.to_i).to eq(401)
+      end
+    end
+  end
+
+  describe '#logout' do
+    it 'clears the session' do
+      post('logout')
+
+      expect(@response.code.to_i).to eq(200)
+    end
+  end
+
   describe '#show' do
     context 'when the user is present' do
       it 'return the user details' do

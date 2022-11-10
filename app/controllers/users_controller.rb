@@ -2,13 +2,13 @@
 
 class UsersController < ApplicationController
   def login
-    render json: { message: 'Logged in successfully!' }, status: :ok if authenticate
+    render json: { message: 'Logged in successfully!' }, status: :ok and return if authenticated?
 
     render json: { message: 'Invalid username/password!' }, status: :unauthorized
   end
 
   def logout
-    session[:user_id] = nil
+    reset_session
 
     render json: { message: 'Logged out successfully!' }, status: :ok
   end
