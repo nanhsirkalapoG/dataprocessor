@@ -2,7 +2,7 @@
 
 class ApplicationController < ActionController::Base
   skip_before_action :verify_authenticity_token
-  before_action :authorized, except: %i[login register]
+  before_action :authorize, except: %i[login register]
 
   def current_user
     @user = User.find(session[:user_id]) if session[:user_id].present?
@@ -12,17 +12,17 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
-  def authenticate
-    @user = User.find_by(email: params[:username])
+  def authenticated?
+    user = User.find_by(email: params[:username])
 
-    if @user.present? && @user.authenticate(params[:password])
-      session[:user_id] = @user.id
+    if user.present? && user.authenticate(params[:password])
+      session[:user_id] = user.id
       return true
     end
     false
   end
 
-  def authorized
+  def authorize
     render json: { message: 'Please login to continue!' }, status: :unauthorized and return unless logged_in?
   end
 end
